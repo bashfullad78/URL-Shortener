@@ -1,14 +1,14 @@
 # URL Shortener with Analytics
 
 A backend REST API that lets users shorten URLs and track engagement through 
-click analytics — including daily breakdowns and summary statistics per link.
+click analytics, including daily breakdowns and summary statistics per link.
 
 ## Tech Stack
 
 Language: Python
 Framework: FastAPI, Pydantic
 Database: PostgreSQL (raw SQL)
-Auth: JWT via python-jose, bcrypt password hashing
+Auth: JWT via python jose, bcrypt password hashing
 Driver: psycopg2
 
 ## Setup
