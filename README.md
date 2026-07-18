@@ -63,11 +63,11 @@ uvicorn main:app --reload
 
 ## Design Decisions
 
-Raw SQL over ORM — deliberate choice to maintain visibility into queries,
+Raw SQL over ORM: deliberate choice to maintain visibility into queries,
 especially for analytics aggregations where ORM abstractions obscure performance.
-PostgreSQL over SQLite — production grade database supporting concurrent users
+PostgreSQL over SQLite: production grade database supporting concurrent users
 and native INET type for IP address storage.
-Click tracking at redirect time — every redirect atomically records the click
+Click tracking at redirect time: every redirect atomically records the click
 and increments the counter in the same transaction, keeping counts accurate.
 
 ## Future Improvements
