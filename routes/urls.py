@@ -10,7 +10,7 @@ router = APIRouter()
 def create_short_url(url: URLCreate, user_id: int = Depends(get_current_user)):
     conn = get_connection()
     cursor = conn.cursor()
-    code = create_unique_short_code()
+    code = create_unique_short_code(conn)
     cursor.execute("INSERT INTO urls (user_id, original_url, short_code) VALUES (%s, %s, %s)", (user_id, url.original_url, code))
     conn.commit()
     conn.close()
