@@ -1,12 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from models.schemas import UserCreate, UserLogin
+from fastapi import APIRouter, HTTPException, Request, Response
+from models.schemas import MessageResponse, TokenResponse, UserCreate, UserLogin
 from utils.auth_helpers import hash_password, verify_password, create_token
+from utils.rate_limit import LOGIN_LIMIT, REGISTER_LIMIT, limiter
 from database import get_connection
 
 router = APIRouter(prefix="/auth")
 
-@router.post("/register")
-def register(user: UserCreate):
+@router.post("/register", response_model=MessageResponse)
+@limiter.limit(REGISTER_LIMIT)
+def register(user: UserCreate, request: Request, response: Response):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -26,8 +28,9 @@ def register(user: UserCreate):
     conn.close()
     return {"message": "User registered successfully"}
 
-@router.post("/login")
-def login(user: UserLogin):
+@router.post("/login", response_model=TokenResponse)
+@limiter.limit(LOGIN_LIMIT)
+def login(user: UserLogin, request: Request, response: Response):
     conn = get_connection()
     cursor = conn.cursor()
 

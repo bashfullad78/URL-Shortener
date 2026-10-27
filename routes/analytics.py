@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
+from models.schemas import AnalyticsSummary, DailyAnalyticsPoint
 from utils.dependencies import get_current_user
 from database import get_connection
 
 router = APIRouter()
 
-@router.get("/urls/{url_id}/analytics/summary")
+@router.get("/urls/{url_id}/analytics/summary", response_model=AnalyticsSummary)
 def get_summary(url_id: int, user_id: int = Depends(get_current_user)):
     conn = get_connection()
     cursor = conn.cursor()
@@ -24,11 +25,11 @@ def get_summary(url_id: int, user_id: int = Depends(get_current_user)):
     return {
         "url_id": url_id,
         "total_clicks": row[0],
-        "first_click": str(row[1]) if row[1] else None,
-        "last_click": str(row[2]) if row[2] else None
+        "first_click": row[1],
+        "last_click": row[2],
     }
 
-@router.get("/urls/{url_id}/analytics/daily")
+@router.get("/urls/{url_id}/analytics/daily", response_model=list[DailyAnalyticsPoint])
 def get_daily(url_id: int, user_id: int = Depends(get_current_user)):
     conn = get_connection()
     cursor = conn.cursor()
@@ -45,4 +46,4 @@ def get_daily(url_id: int, user_id: int = Depends(get_current_user)):
     rows = cursor.fetchall()
     conn.close()
 
-    return [{"date": str(row[0]), "clicks": row[1]} for row in rows]
+    return [{"date": row[0], "clicks": row[1]} for row in rows]
